@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>HomeMeal – Monthly Family Meal Planner</title>
+<style>
+:root{--bg:#f7f2e7;--c:#fff;--g:#7d9a78;--gd:#56734f;--t:#2e3a2c;--m:#7a8577;--l:#e4dcc8;--r:#c0504d;--y:#d9a441;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1d231c;--c:#283026;--t:#eee8d8;--m:#a5b0a1;--l:#3a4437}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:15px/1.5 system-ui,Georgia,sans-serif}
+main{max-width:1000px;margin:auto;padding:12px}h1{font-size:20px;margin:6px 0}h3{margin:14px 0 6px}
+#nav{display:flex;gap:6px;overflow-x:auto;padding:6px 0;position:sticky;top:0;background:var(--bg);z-index:5}
+button,.btn,select,input,textarea{font:inherit;color:var(--t);background:var(--c);border:1px solid var(--l);border-radius:10px;padding:5px 10px;text-decoration:none;max-width:100%}
+button,.btn{cursor:pointer;white-space:nowrap}button.on,button.p{background:var(--g);color:#fff;border-color:var(--g)}
+.card{background:var(--c);border:1px solid var(--l);border-radius:14px;padding:12px;margin:8px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}.grid .card{margin:0}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}small,.m{color:var(--m)}.ml{border-top:1px dashed var(--l);padding-top:6px;margin-top:6px}
+.st{font-size:22px;font-weight:700}.ir{display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--l);padding:6px 0}.ir>div{flex:1}.dim{opacity:.55}.ap{width:105px}
+.br{position:relative;background:var(--l);border-radius:8px;height:26px;margin:5px 0;overflow:hidden}.br i{position:absolute;inset:0 auto 0 0;background:var(--g);opacity:.6}.br span,.br em{position:absolute;top:2px;font-style:normal;font-size:13px}.br span{left:8px}.br em{right:8px}
+.g{color:var(--gd)}.y{color:var(--y)}.r{color:var(--r)}.bg{border-left:5px solid var(--g)}.by{border-left:5px solid var(--y)}.brr{border-left:5px solid var(--r)}
+.ov{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;padding:12px;z-index:9}.ov .card{width:min(440px,100%);max-height:90vh;overflow:auto}.ov input,.ov select,.ov textarea{width:100%;display:block}
+.tag{display:inline-block;border-radius:8px;padding:0 8px;background:var(--l);font-size:12px}.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+</style></head><body><main><h1>🥗 HomeMeal <small>Monthly Family Meal Planner</small></h1><div id="nav"></div><div id="app"></div></main>
+<script>
+const R=`Ayam kecap|Tumis buncis wortel|ay350 bc150 wo120
+Telur balado|Sayur sop|te8 wo100 kl150 bc80
+Ikan kembung goreng|Bening bayam jagung|kb450 by2 jg2
+Semur daging tahu|Tumis sawi putih|sp250 th4 sw300
+Ayam ungkep|Capcay|ay400 wo100 kl150 sw150
+Tahu tempe bacem|Tumis kangkung|th5 tm2 kg2
+Telur dadar sayur|Sayur lodeh|te8 lb250 kp1 tm1
+Ayam teriyaki|Brokoli wortel|ay350 br250 wo100
+Udang saus mentega|Cah sawi|ud300 sw300
+Telur kukus tahu|Sop makaroni|te6 th3 wo100 kl100
+Ikan nila goreng|Tumis tauge tahu|ni500 tu200 th3
+Ayam opor|Sayur labu siam|ay400 lb300
+Tempe orek telur|Tumis kacang panjang|tm3 te5 kp2
+Pepes tahu ikan|Sayur bening oyong|th4 kb300 oy300
+Beef teriyaki|Tumis pokcoy|sp300 pk300
+Ayam saus mentega|Capcay|ay350 wo100 kl150 sw150
+Telur semur|Bayam jagung|te8 by2 jg2
+Ikan tongkol balado|Tumis kacang panjang|tg450 kp2
+Bakso ayam homemade|Sayur sop|ay400 wo100 kl150 bc80
+Tahu telur kecap|Tumis kangkung|th5 te5 kg2
+Ayam suwir kemangi|Bening oyong|ay350 oy300
+Ayam woku|Tumis wortel buncis|ay400 wo120 bc150
+Telur orak-arik tahu|Sup jagung|te6 th3 jg3
+Ikan dori saus lemon|Tumis brokoli|do400 br250
+Daging sapi lada hitam|Tumis pokcoy|sp300 pk300
+Ayam bakar madu|Sayur asem|ay400 jg2 lb200 kp1
+Perkedel tahu telur|Tumis sawi putih|th5 te4 sw300
+Udang bawang putih|Cah kangkung|ud300 kg2
+Tahu tempe goreng|Bening bayam jagung|th4 tm2 by2 jg1
+Ikan nila bumbu kuning|Tumis kangkung|ni500 kg2
+Ayam goreng bawang|Tumis wortel buncis|ay350 wo100 bc150
+Telur ceplok kecap|Sayur sop|te6 wo100 kl150 bc80
+Pepes tahu tempe|Bening oyong|th5 tm1 oy300
+Ayam suwir bumbu kuning|Tumis sawi putih|ay350 sw300
+Ikan tongkol suwir|Tumis buncis wortel|tg400 bc150 wo100
+Telur dadar tahu|Tumis kacang panjang|te6 th3 kp2
+Ayam goreng lengkuas|Bening bayam jagung|ay350 by2 jg2
+Ikan kembung bumbu kuning|Tumis sawi putih|kb450 sw300
+Ayam rica ringan|Tumis kangkung|ay350 kg2
+Tempe tahu goreng|Sayur sop|tm3 th3 wo100 kl150 bc80
+Ikan tongkol pepes|Sayur bening labu siam|tg400 lb300
+Ayam kecap bawang|Capcay|ay350 wo100 kl150 sw150
+Ikan nila goreng sambal ringan|Bening bayam jagung|ni500 by2 jg2
+Tahu isi telur|Tumis buncis wortel|th5 te4 bc150 wo100
+Ayam panggang bumbu|Tumis kangkung|ay350 kg2
+Tempe tahu balado ringan|Sayur sop|tm3 th3 wo100 kl150 bc80
+Ikan kembung asam manis|Tumis pokcoy|kb450 pk300
+Ayam goreng kuning|Sayur bening oyong|ay350 oy300
+Telur bumbu rujak|Tumis kacang panjang|te8 kp2
+Tahu tempe orek|Bening bayam jagung|th4 tm3 by2 jg1
+Ayam tim jahe|Tumis wortel brokoli|ay350 wo100 br200
+Telur gulung tahu|Sayur sop|te6 th3 wo100 kl150 bc80
+Ikan nila asam manis|Cah kangkung|ni500 kg2
+Tempe mendoan tahu|Tumis kacang panjang|tm3 th3 kp2
+Ikan tongkol bumbu woku|Tumis sawi putih|tg400 sw300
+Ayam goreng serundeng|Sayur labu siam|ay350 lb300`;
+// code:[nama,satuan,harga estimasi/satuan,kategori,protein(g)/satuan (estimasi kasar)]
+const C={ay:['Ayam','g',38,'P',.2],te:['Telur','pcs',2000,'P',6],sp:['Daging sapi','g',130,'P',.21],kb:['Ikan kembung','g',40,'P',.2],ni:['Ikan nila','g',35,'P',.18],tg:['Ikan tongkol','g',32,'P',.22],do:['Ikan dori','g',40,'P',.15],ud:['Udang','g',90,'P',.18],th:['Tahu','pcs',1200,'P',5],tm:['Tempe','papan',4000,'P',15],wo:['Wortel','g',15,'V'],bc:['Buncis','g',18,'V'],br:['Brokoli','g',30,'V'],by:['Bayam','ikat',3000,'V'],kg:['Kangkung','ikat',3000,'V'],sw:['Sawi putih','g',12,'V'],pk:['Pokcoy','g',18,'V'],jg:['Jagung','buah',3500,'V'],kl:['Kol','g',10,'V'],lb:['Labu siam','g',10,'V'],kp:['Kacang panjang','ikat',3000,'V'],oy:['Oyong','g',10,'V'],tu:['Tauge','g',10,'V']};
+const A={ay:['te','kb','th','tm'],sp:['ay','th','te'],ud:['kb','te'],br:['bc','wo'],do:['kb','ni'],ni:['kb','th'],tg:['kb','te'],kb:['th','te']};
+const I={ay:'🍗',te:'🥚',sp:'🥩',kb:'🐟',ni:'🐟',tg:'🐟',do:'🐟',ud:'🦐',th:'🍢',tm:'🍢'};
+const TG=['Belum pernah dicoba','Disukai semua keluarga','Disukai toddler','Perlu penyesuaian rasa'];
+const NAV=[['dash','Dashboard'],['plan','Meal Plan'],['shop','Belanja'],['rec','Resep'],['bud','Budget'],['frz','Freezer'],['fav','Favorit'],['set','Setting']];
+const $=s=>document.querySelector(s),rp=n=>'Rp'+Math.round(n).toLocaleString('id-ID'),fmt=n=>Math.round(n*10)/10,KEY='homemeal-v1';
+let S,V='dash',F='A',W=1,RID=null,PO=4;
+const today=()=>new Date().toISOString().slice(0,10),addD=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
+function init(){let s;try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!s)s={m:R.split('\n').map((l,i)=>{const[n,v,g]=l.split('|'),p={};(g.match(/[a-z]{2}\d+/g)||[]).forEach(x=>p[x.slice(0,2)]=+x.slice(2));return{id:i+1,d:i%28+1,t:i<28?'L':'D',n,v,p,st:'Planned',ck:0}}),inv:[],h:[],f:{},b:{},man:[],ov:{},up:{},bud:500000,seq:1};S=s}
+let SY=null,LJ='',tm,ST='';try{SY=JSON.parse(localStorage.getItem('hm-sync'))}catch(e){}
+const save=()=>{const j=JSON.stringify({...S,ts:0});if(j!=LJ){LJ=j;S.ts=Date.now();push()}try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const pr=c=>C[c][3]=='P'?C[c][4]:1,uprice=c=>S.up[c]||C[c][2],wk=d=>Math.ceil(d/7),stock=c=>S.inv.filter(i=>i.c==c).reduce((a,i)=>a+i.q,0);
+const cost=(p,f=1)=>Object.entries(p).reduce((a,[c,q])=>a+q*f*C[c][2],0);
+const nq=(c,a,q)=>{const x=q*pr(c)/pr(a);return C[a][1]=='g'?Math.ceil(x/10)*10:Math.ceil(x)};
+const ic=m=>I[Object.keys(m.p).find(c=>C[c][3]=='P')]||'🍽️';
+const yt=q=>'https://www.youtube.com/results?search_query=resep+'+encodeURIComponent(q).replace(/%20/g,'+')+'+Indonesia';
+function rows(w){const need={};S.m.filter(m=>wk(m.d)==w&&m.st!='Skipped').forEach(m=>{for(const c in m.p)need[c]=(need[c]||0)+m.p[c]});
+const r=Object.keys(need).sort((a,b)=>C[a][3].localeCompare(C[b][3])||C[a][0].localeCompare(C[b][0])).map(c=>{const n=S.ov[w+'-'+c]??need[c],s=stock(c);return{k:w+'-'+c,c,name:C[c][0],u:C[c][1],n,st:Math.min(s,n),buy:Math.max(0,n-s),pr:C[c][2]}}).filter(x=>x.n>0);
+S.man.filter(x=>x.w==w).forEach(x=>r.push({k:'m'+x.id,man:x.id,name:x.name,u:x.u,n:x.q,st:0,buy:x.q,pr:x.p}));return r}
+function winfo(w){const r=rows(w),b=r.filter(x=>x.buy>0);return{r,est:b.reduce((a,x)=>a+x.buy*x.pr,0),act:r.reduce((a,x)=>a+(S.b[x.k]?.a||0),0),done:b.filter(x=>S.b[x.k]?.d).length,tot:b.length}}
+function form(t,f,cb,ok='Simpan'){const d=document.createElement('div');d.className='ov';d.innerHTML=`<div class=card><h3>${t}</h3>${f.map((x,i)=>`<label><small>${x[1]}</small></label>`+(x[3]=='sel'?`<select id=f${i}>${x[4].map(o=>`<option value="${o[0]}"${o[0]==x[2]?' selected':''}>${o[1]}</option>`).join('')}</select>`:x[3]=='ta'?`<textarea id=f${i} rows=7>${x[2]}</textarea>`:`<input id=f${i} type=${x[3]||'text'} value="${x[2]}">`)).join('')}<div class=row><button class=p id=ok>${ok}</button><button id=no>Batal</button></div></div>`;document.body.append(d);d.querySelector('#no').onclick=()=>d.remove();d.querySelector('#ok').onclick=()=>{cb(f.map((x,i)=>d.querySelector('#f'+i).value));d.remove();render()}}
+function use(c,q,why){let left=q;S.inv.filter(i=>i.c==c).sort((a,b)=>(a.e||'9').localeCompare(b.e||'9')).forEach(i=>{if(left<=0)return;const t=Math.min(i.q,left);i.q-=t;left-=t;S.h.push({t:today(),c,q:-t,w:why})});S.inv=S.inv.filter(i=>i.q>0)}
+function setSt(id,v){const m=S.m.find(x=>x.id==id);m.st=v;if(v=='Cooked'&&!m.ck){m.ck=1;for(const c in m.p)use(c,m.p[c],'Dimasak: '+m.n)}render()}
+const parseIng=s=>{const p={};(s.match(/[a-z]{2}\d+/g)||[]).forEach(x=>{if(C[x.slice(0,2)])p[x.slice(0,2)]=+x.slice(2)});return p};
+function editM(id){const m=S.m.find(x=>x.id==id);form('Edit menu (ganti lauk/sayur/bahan)',[['n','Nama lauk',m.n],['v','Nama sayur',m.v],['g','Bahan (kode+jumlah): '+Object.keys(C).join(' '),Object.entries(m.p).map(([c,q])=>c+q).join(' ')]],x=>{m.n=x[0];m.v=x[1];m.p=parseIng(x[2]);m.ck=0})}
+function swapM(id){const m=S.m.find(x=>x.id==id);form('Tukar dengan hari lain',[['t','Target (mis. 12L = hari 12 lunch, 3D = hari 3 dinner)','']],x=>{const z=x[0].match(/(\d+)([LD])/i),o=z&&S.m.find(y=>y.d==+z[1]&&y.t==z[2].toUpperCase());if(!o)return;['n','v','p'].forEach(k=>{[m[k],o[k]]=[o[k],m[k]]})})}
+function sub(id,x,a){const m=S.m.find(y=>y.id==id),o=m.p[x],q=nq(x,a,o),d=o*uprice(x)-q*uprice(a),pt=c=>C[c][3]=='P'?`≈${Math.round((c==x?o:q)*pr(c)/4)} g protein/porsi`:'';
+form('Compare Alternatives',[['t','',`Awal: ${C[x][0]} ${o} ${C[x][1]} = ${rp(o*uprice(x))} ${pt(x)}\nAlternatif: ${C[a][0]} ${q} ${C[a][1]} = ${rp(q*uprice(a))} ${pt(a)}\nSelisih: ${d>=0?'hemat ':'lebih mahal '}${rp(Math.abs(d))}\nCatatan: harga adalah estimasi pasar (belum diverifikasi) kecuali sudah Anda isi sebagai harga aktual di Belanja.`,'ta']],()=>{m.p[a]=(m.p[a]||0)+q;delete m.p[x];m.note=(m.note||'')+C[x][0]+'→'+C[a][0]+'; '},'Apply Substitution')}
+function openRec(id){RID=id;V='rec';PO=4;render()}
+function go(v){V=v;if(v=='rec')RID=null;render()}
+const wt=()=>'<div class=row>'+[1,2,3,4].map(w=>`<button class="${W==w?'on':''}" onclick="W=${w};render()">Minggu ${w}</button>`).join('')+'</div>';
+const bar=(l,v,mx,t)=>`<div class=br><span>${l}</span><i style="width:${Math.min(100,v/mx*100)}%"></i><em>${t}</em></div>`;
+const tod=m=>{const k=Object.keys(m.p);return['Cocok untuk toddler dengan modifikasi (menu keluarga yang disesuaikan, tanpa menu terpisah).',/balado|rica|woku|lada|rujak|pedas/i.test(m.n)&&'Sisihkan porsi toddler SEBELUM menambah cabai/lada/bumbu kuat.',k.some(c=>'kb ni tg do'.includes(c))&&'Ikan: periksa duri dengan jari dan suwir halus sebelum disajikan.',k.some(c=>'ay sp'.includes(c))&&'Ayam/daging: cincang atau suwir ±1 cm, masak matang sempurna, buang tulang.','Sayur: potong kecil dan masak empuk; hindari potongan bulat/keras utuh (risiko tersedak).','Kurangi garam, gula, kecap. Perhatikan alergi (telur, ikan, udang); konsultasikan ke dokter anak bila ragu.'].filter(Boolean)};
+function favCtl(n){const f=S.f[n];if(!f)return`<button onclick="favT('${n}')">☆ Add to Favorites</button>`;return`<div class=row><button onclick="favT('${n}')">★ Remove from Favorites</button>${[1,2,3,4,5].map(i=>`<button onclick="S.f['${n}'].r=${i};render()">${f.r>=i?'★':'☆'}</button>`).join('')}<select onchange="S.f['${n}'].tg=this.value;render()">${TG.map(t=>`<option${f.tg==t?' selected':''}>${t}</option>`).join('')}</select><button onclick="noteF('${n}')">📝 Catatan</button></div>${f.note?`<small>Catatan: ${f.note}</small>`:''}`}
+function favT(n){if(S.f[n])delete S.f[n];else{const m=S.m.find(x=>x.n==n);S.f[n]={v:m.v,p:{...m.p},r:0,note:'',tg:TG[0]}}render()}
+const noteF=n=>form('Catatan keluarga',[['n','Catatan',S.f[n].note]],x=>S.f[n].note=x[0]);
+function nextF(n){const cw=wk((S.m.find(m=>m.st!='Cooked')||{d:1}).d);form('Add to Next Week Calendar',[['t','Slot target (mis. 8L = hari 8 lunch)',Math.min(cw*7+1,28)+'L']],x=>{const z=x[0].match(/(\d+)([LD])/i),o=z&&S.m.find(y=>y.d==+z[1]&&y.t==z[2].toUpperCase());if(!o)return;Object.assign(o,{n,v:S.f[n].v,p:{...S.f[n].p},st:'Planned',ck:0})},'Reuse')}
+const LS=[
+[/ungkep/,'Potong ayam sesuai selera, cuci bersih.|Haluskan {4} siung bawang putih, {5} siung bawang merah, {2} ruas kunyit, {1} ruas jahe, {1} sdt ketumbar.|Tumis bumbu hingga harum, masukkan $P, serai, daun salam, dan {300} ml air.|Ungkep api kecil ±30 menit hingga air menyusut dan bumbu meresap.|Dinginkan; simpan atau goreng/panggang sebentar sebelum disajikan.'],
+[/teriyaki/,'Iris tipis $P (daging: lawan arah serat).|Campur saus: {3} sdm kecap manis, {1} sdm kecap asin, {1} sdm madu, {3} siung bawang putih cincang, {1} ruas jahe parut.|Tumis bawang putih hingga harum, masukkan $P hingga berubah warna.|Tuang saus, masak api sedang hingga mengental dan meresap.|Taburi wijen; potong kecil untuk toddler.'],
+[/mentega/,'Bersihkan $P (udang: kupas, buang kotoran punggung).|Lelehkan {2} sdm mentega, tumis {3} siung bawang putih dan {1} bawang bombay hingga harum.|Masukkan $P, masak hingga matang sempurna.|Tambahkan {1} sdm saus tiram, {1} sdm saus tomat, {1} sdm kecap, dan {100} ml air; masak hingga kental.|Lada baru ditambahkan setelah porsi toddler disisihkan.'],
+[/balado/,'Goreng $P hingga matang; tiriskan.|Ulek kasar {5} cabai merah keriting (kurangi/tanpa cabai untuk keluarga dengan toddler), {4} bawang merah, {3} bawang putih, {2} tomat.|Tumis sambal hingga matang dan harum, beri garam dan gula secukupnya.|Sisihkan porsi toddler dulu (tanpa sambal), lalu campur sisanya dengan sambal.|Aduk rata dan sajikan.'],
+[/semur/,'Siapkan $P; telur: rebus matang lalu kupas. Daging sapi: rebus/presto hingga empuk, potong dadu.|Tumis {4} bawang merah, {3} bawang putih, sedikit pala, {2} cengkih, {1} kayu manis.|Masukkan $P, tambahkan {4} sdm kecap manis dan {400} ml air.|Masak api kecil hingga bumbu meresap dan kuah menyusut.|Koreksi rasa; kuah toddler cukup sedikit garam.'],
+[/opor/,'Haluskan {5} bawang merah, {3} bawang putih, {3} kemiri, {1} ruas kunyit, {1} sdt ketumbar.|Tumis bumbu bersama serai, daun salam, dan lengkuas hingga harum.|Masukkan $P, aduk hingga berubah warna.|Tuang {200} ml santan dan {200} ml air; masak api kecil sambil sesekali diaduk agar santan tidak pecah.|Masak ±30 menit hingga ayam empuk; beri garam secukupnya.'],
+[/woku/,'Potong $P, lumuri sedikit jeruk nipis.|Haluskan {6} bawang merah, {3} bawang putih, {2} ruas jahe, {1} ruas kunyit, cabai secukupnya (kurangi untuk keluarga).|Tumis bumbu bersama serai, daun jeruk, tomat iris.|Masukkan $P dan {150} ml air; masak hingga matang dan bumbu meresap.|Sisihkan porsi toddler sebelum cabai; tambahkan kemangi di akhir.'],
+[/pepes/,'Haluskan bumbu: {4} bawang merah, {3} bawang putih, {2} kemiri, {1} ruas kunyit (cabai opsional, tanpa untuk toddler).|Campur bumbu dengan $P, tomat iris, dan kemangi; beri garam secukupnya.|Bungkus dengan daun pisang, semat.|Kukus ±30-40 menit hingga matang.|Opsional: bakar sebentar untuk aroma; periksa duri ikan untuk toddler.'],
+[/bakar|panggang/,'Marinasi $P: {3} sdm kecap manis, {2} sdm madu, {4} siung bawang putih halus, {1} sdm margarin, garam.|Diamkan minimal 30 menit di kulkas.|Panggang/bakar api sedang (atau oven 200°C) sambil dioles sisa marinasi.|Balik berkala hingga matang sempurna dan sedikit karamel.|Suwir/potong kecil untuk toddler.'],
+[/bacem/,'Haluskan {4} bawang merah, {3} bawang putih, {1} sdt ketumbar.|Rebus tahu dan tempe dengan bumbu halus, {3} sdm gula merah, {3} sdm kecap, daun salam, lengkuas, dan air hingga terendam.|Masak api kecil ±40 menit hingga air menyusut.|Goreng atau bakar sebentar hingga permukaan agak kering.|Potong kecil untuk toddler.'],
+[/bakso/,'Haluskan $P ({400} g) bersama {3} siung bawang putih dan es batu; beri garam secukupnya.|Campur {6} sdm tepung tapioka hingga kalis.|Bentuk bulat kecil; rebus dalam air mendidih hingga mengapung dan matang.|Buat kuah dari tumisan bawang putih + air rebusan.|Potong bakso menjadi bagian kecil untuk toddler.'],
+[/kukus/,'Kocok {6} butir telur (sesuai porsi), campur tahu dihancurkan dan wortel parut.|Haluskan {2} siung bawang putih, campurkan; beri garam sedikit.|Tuang ke wadah tahan panas yang diolesi minyak tipis.|Kukus api sedang 15-20 menit; tutup dilapisi lap agar tidak menetes.|Matang jika tusuk gigi bersih; potong dadu kecil untuk toddler.'],
+[/perkedel/,'Hancurkan tahu, tiriskan airnya.|Campur dengan telur, {2} bawang putih halus, seledri cincang, {2} sdm tepung; beri garam dan lada tipis.|Bentuk pipih bulat.|Goreng api sedang hingga kuning keemasan dan matang dalam.|Tiriskan dan sajikan hangat.'],
+[/dadar|orak|gulung|tahu isi/,'Kocok telur dengan sedikit garam; campur $P yang dipotong/dihancurkan kecil.|Panaskan sedikit minyak di wajan antilengket.|Masak api sedang: dadar/gulung dibalik hingga kedua sisi matang; orak-arik diaduk hingga kering matang.|Telur harus matang sempurna (tidak setengah matang).|Potong kecil untuk toddler.'],
+[/orek/,'Potong dadu kecil tempe (dan tahu); goreng hingga setengah kering.|Tumis {4} bawang merah, {3} bawang putih (cabai opsional).|Masukkan {3} sdm kecap manis dan {1} sdm gula merah.|Campur tempe, aduk hingga kering dan bumbu meresap; telur: orak-arik matang lalu campur.|Sisihkan porsi toddler sebelum cabai.'],
+[/mendoan/,'Campur tepung terigu {5} sdm, {2} sdm tepung beras, bawang putih, daun bawang, air hingga adonan encer.|Iris tempe tipis; tahu potong kotak.|Celup dalam adonan, goreng sebentar api sedang hingga matang.|Tiriskan; sajikan dengan kecap/sambal terpisah.|Potong kecil untuk toddler.'],
+[/lada hitam/,'Iris tipis $P; marinasi {1} sdm kecap dan sedikit maizena. Presto bila perlu agar empuk.|Tumis {3} bawang putih dan {1} bawang bombay.|Masukkan daging, {1} sdt lada hitam kasar, {2} sdm saus tiram, {1} sdm kecap, {100} ml air.|Masak hingga bumbu menyusut dan daging empuk.|Sisihkan porsi toddler sebelum lada.'],
+[/lemon/,'Lumuri $P dengan garam dan sedikit lemon; diamkan 10 menit.|Goreng/pan-sear hingga matang kedua sisi; periksa duri.|Saus: tumis {3} bawang putih dengan {1} sdm mentega, tambah perasan {1} buah lemon, sedikit gula, {50} ml air.|Didihkan sebentar.|Siram saus ke ikan; toddler cukup saus tipis.'],
+[/bawang putih/,'Kupas dan bersihkan $P.|Cincang {8} siung bawang putih; tumis dengan minyak/mentega hingga harum.|Masukkan udang, {1} sdm saus tiram, garam secukupnya.|Masak 3-4 menit hingga merah dan matang; jangan terlalu lama agar tidak keras.|Potong kecil untuk toddler.'],
+[/asam manis/,'Lumuri ikan dengan garam, goreng hingga matang; periksa duri.|Tumis {3} bawang putih, {1} bawang bombay, wortel iris tipis.|Tambah {4} sdm saus tomat, {1} sdm gula, {1} sdm cuka, {100} ml air; kentalkan dengan larutan maizena.|Masukkan ikan, aduk pelan.|Sajikan; pastikan duri dibuang untuk toddler.'],
+[/tim jahe/,'Potong $P, lumuri sedikit garam.|Geprek {2} ruas jahe dan {3} siung bawang putih.|Tata di mangkuk tahan panas, beri {2} sdm kecap asin, wortel iris, dan {100} ml air.|Kukus ±40 menit hingga empuk.|Suwir untuk toddler.'],
+[/rujak/,'Rebus telur hingga matang; kupas dan goreng sebentar.|Ulek {3} cabai (kurangi), {3} sdm gula merah, {1} sdm asam jawa, {2} bawang putih.|Tumis bumbu hingga kental dan harum.|Masukkan telur, aduk rata.|Sisihkan telur toddler sebelum bumbu pedas.'],
+[/rica/,'Potong $P kecil.|Haluskan {5} bawang merah, {3} bawang putih, {1} ruas jahe, {2} cabai (versi ringan).|Tumis bumbu dengan daun jeruk hingga harum; masukkan ayam.|Tambah {100} ml air; masak hingga matang dan meresap.|Taburi kemangi; sisihkan toddler sebelum cabai.'],
+[/kuning|lengkuas|serundeng|goreng bawang/,'Haluskan {4} bawang putih, {3} bawang merah, {2} ruas kunyit, {1} sdt ketumbar, {1} ruas lengkuas.|Lumuri $P dengan bumbu; diamkan 15 menit (ikan: tambah jeruk nipis).|Masak dengan {200} ml air hingga bumbu meresap dan air menyusut (serundeng: tambahkan kelapa parut sangrai).|Goreng hingga keemasan; tiriskan. Bila suwir, suwir halus setelah matang.|Periksa duri/tulang untuk toddler.'],
+[/suwir|kemangi/,'Rebus $P hingga matang sempurna; angkat dan suwir.|Tumis {4} bawang putih dan {4} bawang merah iris (cabai opsional).|Masukkan hasil suwiran, {1} sdm kecap, garam secukupnya.|Tambahkan daun kemangi di akhir, aduk sebentar.|Sisihkan porsi toddler sebelum cabai.'],
+[/goreng/,'Lumuri $P dengan garam, {2} bawang putih halus, dan sedikit jeruk nipis (ikan).|Diamkan 15 menit.|Goreng api sedang hingga matang dan kecokelatan di kedua sisi.|Tiriskan di tisu dapur.|Ikan: suwir dan buang duri; tahu/tempe: potong kecil untuk toddler.'],
+[/kecap/,'Siapkan $P (ayam: potong; telur: goreng ceplok; tahu: goreng setengah matang).|Tumis {3} bawang putih dan {1} bawang bombay.|Masukkan $P, tambah {3} sdm kecap manis dan {150} ml air.|Masak api sedang hingga bumbu meresap dan mengental.|Potong kecil untuk toddler; kecap secukupnya.']];
+const LD='Siapkan dan cuci $P.|Tumis bumbu dasar (bawang putih, bawang merah) hingga harum.|Masukkan $P, masak hingga matang sempurna.|Koreksi rasa; sisihkan porsi toddler sebelum bumbu kuat.|Sajikan hangat.';
+const VS=[
+[/sop|sup/,'Tumis {3} bawang putih dan {2} bawang merah hingga harum.|Tuang {800} ml air; didihkan.|Masukkan sayur keras dulu (wortel, jagung, makaroni), lalu kol, buncis.|Masak hingga empuk; beri seledri dan garam secukupnya.|Toddler: tanpa lada, sayur dipotong kecil.'],
+[/capcay/,'Tumis {3} bawang putih hingga harum.|Masukkan wortel, lalu sawi, kol.|Tuang {100} ml air, {1} sdm saus tiram, kentalkan dengan larutan maizena.|Masak 4-5 menit hingga renyah-empuk.|Potong kecil untuk toddler.'],
+[/lodeh/,'Haluskan {4} bawang merah, {3} bawang putih, {2} kemiri, {1} ruas kunyit.|Tumis bersama lengkuas dan daun salam.|Tuang {200} ml santan + {300} ml air; masukkan labu siam, kacang panjang, tempe.|Masak api kecil hingga empuk, aduk agar santan tidak pecah.|Beri garam secukupnya.'],
+[/asem/,'Didihkan {800} ml air dengan bumbu halus {3} bawang merah, {2} bawang putih (cabai opsional).|Tambah {2} sdm asam jawa dan {1} sdm gula merah.|Masukkan jagung, lalu labu siam dan kacang panjang.|Masak hingga empuk; koreksi rasa.|Toddler: sayur dipotong kecil, kuah tanpa cabai.'],
+[/bening|bayam/,'Didihkan {800} ml air dengan {3} bawang putih iris dan {2} bawang merah iris.|Masukkan jagung/oyong/labu terlebih dahulu hingga hampir empuk.|Masukkan bayam di akhir; masak 1-2 menit.|Beri garam secukupnya.|Jagung pipil dipotong/digeprek kecil untuk toddler.'],
+[/labu siam/,'Kupas dan iris labu siam.|Tumis {3} bawang putih dan {2} bawang merah.|Masukkan labu siam, {100} ml air, garam secukupnya.|Masak hingga empuk.|Potong kecil untuk toddler.'],
+[/tumis|cah|brokoli/,'Cuci dan potong sayur; pisahkan batang/keras dan daun.|Tumis {3} bawang putih dan {2} bawang merah hingga harum.|Masukkan sayur keras dahulu, tambah {50} ml air; lalu sayur daun.|Beri garam/saus tiram secukupnya; masak 3-5 menit agar tetap renyah.|Potong kecil dan pastikan empuk untuk toddler.']];
+const VD='Cuci dan potong sayur.|Tumis bumbu dasar hingga harum.|Masukkan sayur, masak hingga empuk.|Beri garam secukupnya.|Potong kecil untuk toddler.';
+const stp=(m,f)=>{const cu=(S.cr||{})[m.n];if(cu)return'<ol>'+cu.split('\n').filter(Boolean).map(s=>'<li>'+s+'</li>').join('')+'</ol><small>Langkah buatan Anda.</small>';const P=Object.keys(m.p).filter(c=>C[c][3]=='P').map(c=>C[c][0].toLowerCase()).join(' & '),g=(L,k,d)=>((L.find(x=>x[0].test(k.toLowerCase()))||[0,d])[1]).replace(/\{([\d.]+)\}/g,(_,x)=>fmt(x*f)).replace(/\$P/g,P||'bahan').split('|').map(s=>`<li>${s}</li>`).join('');return`<b>Lauk: ${m.n}</b><ol>${g(LS,m.n,LD)}</ol><b>Sayur: ${m.v}</b><ol>${g(VS,m.v,VD)}</ol><small>Takaran bumbu mengikuti jumlah porsi dan bersifat perkiraan; sesuaikan selera dan cek video tutorial.</small>`};
+const P={
+dash(){const T=[1,2,3,4].map(winfo),bud=S.bud*4,act=T.reduce((a,x)=>a+x.act,0),pc={};S.m.filter(m=>m.st!='Skipped').forEach(m=>{for(const c in m.p)if(C[c][3]=='P')pc[C[c][0]]=(pc[C[c][0]]||0)+m.p[c]*C[c][2]});const mx=Math.max(...Object.values(pc));
+const k=(l,v)=>`<div class=card><small>${l}</small><div class=st>${v}</div></div>`,pct=act/bud*100;
+return`<div class=sg>${k('Budget bulanan',rp(bud))}${k('Budget mingguan',rp(S.bud))}${k('Pengeluaran aktual',rp(act))}${k('Sisa budget',rp(bud-act))}${k('Penggunaan',fmt(pct)+'%')}${k('Menu direncanakan',S.m.filter(m=>m.st=='Planned').length+' / '+S.m.length)}${k('Bahan sudah dibeli',T.reduce((a,x)=>a+x.done,0))}${k('Bahan belum dibeli',T.reduce((a,x)=>a+x.tot-x.done,0))}</div>
+<div class=card><b>Estimasi belanja per minggu</b> <small>(batang = estimasi vs budget)</small>${T.map((x,i)=>bar('Minggu '+(i+1),x.est,S.bud,rp(x.est)+' · aktual '+rp(x.act))).join('')}</div>
+<div class=card><b>Estimasi biaya per kategori protein (sebulan, total kebutuhan)</b>${Object.entries(pc).sort((a,b)=>b[1]-a[1]).map(([n,v])=>bar(n,v,mx,rp(v))).join('')}</div>`},
+plan(){return`<div class=row>${['A','L','D'].map(f=>`<button class="${F==f?'on':''}" onclick="F='${f}';render()">${{A:'All Meals',L:'Lunch',D:'Dinner'}[f]}</button>`).join('')}</div>`+[1,2,3,4].map(w=>`<h3>Minggu ${w}</h3><div class=grid>`+[0,1,2,3,4,5,6].map(i=>{const d=(w-1)*7+i+1;return`<div class=card><b>Hari ${d}</b>`+S.m.filter(m=>m.d==d&&(F=='A'||m.t==F)).map(m=>`<div class=ml><small>${m.t=='L'?'🌞 Lunch':'🌙 Dinner'}</small><br>${ic(m)} <b>${m.n}</b> + ${m.v}${m.note?`<br><small>Substitusi: ${m.note}</small>`:''}<br><small>${rp(cost(m.p))}</small> <select onchange="setSt(${m.id},this.value)">${['Planned','Cooked','Skipped'].map(s=>`<option${m.st==s?' selected':''}>${s}</option>`).join('')}</select><div class=row><button onclick="openRec(${m.id})">Resep</button><a class=btn target=_blank href="${yt(m.n)}">▶ YouTube</a><button onclick="editM(${m.id})">Edit</button><button onclick="swapM(${m.id})">Tukar</button></div></div>`).join('')+'</div>'}).join('')+'</div>').join('')},
+shop(){const{r,est,act,done,tot}=winfo(W);const row=y=>`<div class="ir ${y.buy?'':'dim'}"><input type=checkbox ${S.b[y.k]?.d?'checked':''} ${y.buy?'':'disabled'} onchange="S.b['${y.k}']=S.b['${y.k}']||{};S.b['${y.k}'].d=!S.b['${y.k}'].d;render()"><div><b>${y.name}</b> ${fmt(y.n)} ${y.u}<br><small>Freezer ${fmt(y.st)} → beli ${fmt(y.buy)} ${y.u} · est ${rp(y.buy*y.pr)}</small></div><input class=ap type=number placeholder="Rp aktual" value="${S.b[y.k]?.a||''}" onchange="setA('${y.k}',this.value,${y.buy})"><button onclick="edQ('${y.k}')">✎</button><button onclick="delI('${y.k}')">🗑</button></div>`;
+return wt()+`<div class=card><b>Estimasi beli ${rp(est)}</b> · aktual ${rp(act)} · ${done}/${tot} dibeli<br><small>Kebutuhan lunch + dinner digabung, sudah dikurangi stok freezer.</small><div class=row><button class=p onclick="gen()">Generate Shopping List</button><button onclick="rst()">Reset Checklist</button><button onclick="addMan()">Tambah Bahan Manual</button><button onclick="exp()">Export</button></div></div>`+['P','V','M'].map(g=>{const x=r.filter(y=>g=='M'?y.man:!y.man&&C[y.c][3]==g);return x.length?`<h3>${{P:'Protein',V:'Sayuran',M:'Manual'}[g]}</h3><div class=card>${x.map(row).join('')}</div>`:''}).join('')},
+rec(){if(!RID)return`<input placeholder="Cari resep..." oninput="$('#rl').innerHTML=recList(this.value)" style="width:100%"><div id=rl class=grid style="margin-top:8px">${recList('')}</div>`;
+const m=S.m.find(x=>x.id==RID),f=PO/4,L=c=>`<li>${C[c][0]} ${fmt(m.p[c]*f)} ${C[c][1]}${A[c]&&PO==4?`<br><small>Ganti: ${A[c].map(a=>`<button onclick="sub(${m.id},'${c}','${a}')">${C[a][0]}</button>`).join(' ')}</small>`:''}</li>`,ks=Object.keys(m.p),pn=ks.filter(c=>C[c][3]=='P'),vn=ks.filter(c=>C[c][3]=='V');
+return`<button onclick="go('rec')">← Semua resep</button><div class=card><div class=st>${ic(m)} ${m.n} + ${m.v}</div><small>Hari ${m.d} · ${m.t=='L'?'Lunch':'Dinner'} · Mudah · Persiapan 15 mnt · Masak 30 mnt · Estimasi ${rp(cost(m.p,f))}</small>
+<div class=row>${[2,3,4,5,6].map(n=>`<button class="${PO==n?'on':''}" onclick="PO=${n};render()">${n} orang</button>`).join('')}</div><small>Porsi dasar 4 (3 dewasa + 1 toddler). Substitusi tersedia di porsi 4 orang.</small>
+<div class=row><a class="btn p" target=_blank href="${yt(m.n)}">▶ Tonton Tutorial: ${m.n}</a><a class=btn target=_blank href="${yt(m.v)}">▶ Tutorial sayur</a><a class=btn target=_blank href="${yt(m.n+' '+m.v)}">Lihat Video Lainnya</a><button class=p onclick="setSt(${m.id},'Cooked')">${m.st=='Cooked'?'✓ Sudah dimasak':'Tandai Dimasak (kurangi stok freezer)'}</button></div>${m.note?`<small>Substitusi: ${m.note}</small>`:''}
+<h3>Lauk</h3><ul>${pn.map(L).join('')}</ul><h3>Sayur</h3><ul>${vn.map(L).join('')}</ul>
+<h3>Langkah</h3><div class=row><button onclick="crF(${m.id})">✎ Tulis/Ubah Langkah</button>${(S.cr||{})[m.n]?`<button onclick="delete S.cr['${m.n}'];render()">Pakai langkah bawaan</button>`:''}</div>${stp(m,f)}
+<h3>👶 Toddler (26 bln)</h3><ul>${tod(m).map(x=>`<li>${x}</li>`).join('')}</ul><h3>Penyimpanan</h3><small>Simpan dalam wadah tertutup: kulkas ≤2 hari, freezer ≤1 bulan; panaskan hingga mendidih sebelum disajikan.</small>
+<h3>Favorit</h3>${favCtl(m.n)}</div>`},
+bud(){const i=winfo(W),b=S.bud,c=i.est>b?'r':i.est>b*.85?'y':'g',list=[];
+S.m.filter(m=>wk(m.d)==W&&m.st!='Skipped').forEach(m=>{for(const x in m.p){if(!A[x])continue;let best;A[x].forEach(a=>{const q=nq(x,a,m.p[x]),s=m.p[x]*uprice(x)-q*uprice(a);if(!best||s>best.s)best={a,q,s}});if(best&&best.s>0)list.push({m,x,...best})}});list.sort((a,b)=>b.s-a.s);
+return wt()+`<div class="card b${c}"><b class=${c}>${{r:'🔴 Melebihi budget',y:'🟡 Mendekati batas',g:'🟢 Dalam anggaran'}[c]}</b><div class=sg><div><small>Estimasi belanja</small><div class=st>${rp(i.est)}</div></div><div><small>Aktual</small><div class=st>${rp(i.act)}</div></div><div><small>Sisa (batas ${rp(b)})</small><div class=st>${rp(b-i.act)}</div></div></div>${c=='r'?'<b>Estimasi melebihi budget — lihat rekomendasi di bawah. Menu tidak diubah otomatis.</b>':''}</div>
+<h3>Smart Ingredient Substitution</h3><small>Harga = estimasi pasar kecuali Anda isi harga aktual di Belanja. Diurutkan dari penghematan terbesar.</small>${list.slice(0,8).map(y=>`<div class=card><b>H${y.m.d} ${y.m.t}: ${y.m.n}</b><br>${C[y.x][0]} ${y.m.p[y.x]}${C[y.x][1]} (${rp(y.m.p[y.x]*uprice(y.x))}) → ${C[y.a][0]} ${y.q}${C[y.a][1]} (${rp(y.q*uprice(y.a))}) · <b class=g>hemat ${rp(y.s)}</b><div class=row><button onclick="sub(${y.m.id},'${y.x}','${y.a}')">Compare Alternatives</button></div></div>`).join('')||'<div class=card>Tidak ada substitusi yang lebih hemat saat ini.</div>'}`},
+frz(){const inv=[...S.inv].sort((a,b)=>(a.e||'9').localeCompare(b.e||'9')),dl=e=>Math.ceil((new Date(e)-new Date(today()))/864e5),low=i=>i.q<(C[i.c][1]=='g'?200:C[i.c][1]=='pcs'?3:2),al=inv.filter(i=>i.e&&dl(i.e)<=7);
+return`<div class=card><b>Freezer Inventory</b><div class=row><button class=p onclick="invF()">Add Inventory</button></div>${inv[0]?`<small>FEFO – gunakan dahulu: <b>${C[inv[0].c][0]}</b> (batas ${inv[0].e||'-'})</small>`:'<small>Belum ada stok.</small>'}${al.length?`<div class=r>⚠ Expiration reminder: ${al.map(i=>C[i.c][0]+' ('+(dl(i.e)<0?'lewat batas':dl(i.e)+' hari')+')').join(', ')}</div>`:''}</div>`+inv.map(i=>`<div class=card><b>${C[i.c][0]}</b> ${fmt(i.q)} ${C[i.c][1]} <span class=tag>${C[i.c][3]=='P'?'Protein':'Sayur'}</span> ${low(i)?'<span class="tag r">Low stock</span>':''} ${i.e&&dl(i.e)<=7?'<span class="tag r">Segera gunakan</span>':''}<br><small>Beli ${i.bd} · simpan ${i.sd} · batas saran ${i.e||'-'} · ${i.loc||'-'} ${i.note?'· '+i.note:''}</small><div class=row><button onclick="useF(${i.id})">Use</button><button onclick="invF(${i.id})">Edit</button><button onclick="S.inv=S.inv.filter(x=>x.id!=${i.id});render()">Delete</button></div></div>`).join('')+`<div class=card><b>Panduan keamanan pangan</b><br><small>Simpan di −18°C. Cairkan di kulkas, bukan suhu ruang; jangan bekukan ulang bahan yang sudah mencair penuh. Tanggal batas hanya saran kualitas, bukan jaminan aman: buang bila berbau, berlendir, pernah mencair, atau freezer burn parah. Tanggal simpan saja tidak cukup untuk menilai keamanan.</small></div><div class=card><b>Stock History</b>${S.h.slice(-15).reverse().map(h=>`<br><small>${h.t} · ${C[h.c][0]} ${h.q>0?'+':''}${fmt(h.q)} ${C[h.c][1]} · ${h.w}</small>`).join('')||'<br><small>Kosong</small>'}</div>`},
+fav(){const e=Object.entries(S.f);return e.length?e.map(([n,f])=>`<div class=card><div class=st>${ic({p:f.p})} ${n} + ${f.v}</div><small>Protein: ${Object.keys(f.p).filter(c=>C[c][3]=='P').map(c=>C[c][0]).join(', ')} · Estimasi ${rp(cost(f.p))} · Toddler-friendly (dimodifikasi) · ${f.tg}</small>${favCtl(n)}<div class=row><button class=p onclick="nextF('${n}')">Add to Next Week Calendar</button><a class=btn target=_blank href="${yt(n)}">▶ YouTube</a></div></div>`).join(''):'<div class=card>Belum ada favorit. Buka sebuah resep lalu tekan Add to Favorites.</div>'},
+set(){return`<div class=card><b>Budget mingguan (Rp)</b><div class=row><input type=number id=sb value="${S.bud}"><button class=p onclick="S.bud=+$('#sb').value||S.bud;render()">Simpan</button></div><small>Budget bulanan = 4 × mingguan.</small></div><div class=card><b>Sinkronisasi keluarga</b><br><small>${SY?'Aktif · kode: '+SY.c+(ST?' · '+ST:''):'Belum aktif: data hanya ada di perangkat ini.'}</small><div class=row><button class=p onclick="syF()">${SY?'Ubah':'Hubungkan'} Supabase</button>${SY?'<button onclick="syOff()">Putuskan</button>':''}</div><small>Pengaturan ini tersimpan per perangkat. Isi URL, key, dan kode yang sama di HP suami dan babysitter.</small></div><div class=card><button onclick="form('Reset semua data?',[],()=>{localStorage.removeItem(KEY);init()},'Ya, reset')">Reset semua data</button></div>`}};
+const recList=q=>S.m.filter(m=>(m.n+' '+m.v).toLowerCase().includes(q.toLowerCase())).map(m=>`<button style="text-align:left;white-space:normal" onclick="openRec(${m.id})">${ic(m)} <b>${m.n}</b> + ${m.v}<br><small>Hari ${m.d} · ${m.t=='L'?'Lunch':'Dinner'}</small></button>`).join('');
+function setA(k,v,b){S.b[k]=S.b[k]||{};S.b[k].a=+v||0;if(k[0]!='m'&&b>0&&+v>0)S.up[k.split('-')[1]]=+v/b;render()}
+function gen(){Object.keys(S.ov).forEach(k=>k.startsWith(W+'-')&&delete S.ov[k]);render()}
+function rst(){rows(W).forEach(x=>{if(S.b[x.k])S.b[x.k].d=0});render()}
+function delI(k){if(k[0]=='m')S.man=S.man.filter(x=>'m'+x.id!=k);else S.ov[k]=0;render()}
+function edQ(k){form('Edit jumlah',[['q','Jumlah',(rows(W).find(x=>x.k==k)||{}).n]],x=>{if(k[0]=='m')S.man.find(y=>'m'+y.id==k).q=+x[0];else S.ov[k]=+x[0]})}
+function addMan(){form('Tambah bahan manual',[['n','Nama',''],['u','Satuan (kg, gram, ikat, pcs, papan, buah)','pcs'],['q','Jumlah',1,'number'],['p','Harga estimasi per satuan (Rp)',0,'number']],x=>{if(x[0])S.man.push({id:S.seq++,w:W,name:x[0],u:x[1],q:+x[2],p:+x[3]})})}
+function exp(){const t=rows(W).filter(x=>x.buy>0).map(x=>`${S.b[x.k]?.d?'[x]':'[ ]'} ${x.name} ${fmt(x.buy)} ${x.u} (~${rp(x.buy*x.pr)})`).join('\n');form('Export Shopping List – Minggu '+W,[['t','Salin teks ini',t,'ta']],()=>{},'Tutup')}
+function invF(id){const i=S.inv.find(x=>x.id==id)||{c:'ay',q:0,bd:today(),sd:today(),e:addD(90),loc:'Freezer atas',note:''};form(id?'Edit Inventory':'Add Inventory',[['c','Bahan (satuan: g / pcs / ikat / papan / buah)',i.c,'sel',Object.keys(C).map(c=>[c,C[c][0]+' ('+C[c][1]+')'])],['q','Jumlah',i.q,'number'],['bd','Tanggal pembelian',i.bd,'date'],['sd','Tanggal disimpan',i.sd,'date'],['e','Batas penggunaan yang disarankan (bukan jaminan aman)',i.e,'date'],['loc','Lokasi',i.loc],['note','Catatan',i.note]],x=>{const o={c:x[0],q:+x[1],bd:x[2],sd:x[3],e:x[4],loc:x[5],note:x[6]};if(id)Object.assign(i,o);else S.inv.push({id:S.seq++,...o});S.h.push({t:today(),c:o.c,q:id?0:o.q,w:id?'Edit':'Tambah stok'})})}
+function useF(id){const i=S.inv.find(x=>x.id==id);form('Use Inventory',[['q','Jumlah dipakai ('+C[i.c][1]+')',1,'number']],x=>use(i.c,Math.min(+x[0],i.q),'Dipakai manual'))}
+function crF(id){const m=S.m.find(x=>x.id==id);form('Langkah resep: '+m.n,[['t','Satu langkah per baris (disimpan untuk menu ini)',(S.cr||{})[m.n]||stp(m,1).split('Takaran bumbu')[0].replace(/<\/b>/g,'\n').replace(/<\/li>/g,'\n').replace(/<[^>]+>/g,'').trim(),'ta']],x=>{S.cr=S.cr||{};if(x[0].trim())S.cr[m.n]=x[0].trim();else delete S.cr[m.n]})}
+const rpc=(fn,b)=>fetch(SY.u+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:SY.k,'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>t?JSON.parse(t):null);
+function push(){if(!SY)return;clearTimeout(tm);tm=setTimeout(()=>{S.ts=S.ts||Date.now();rpc('hm_put',{c:SY.c,d:S}).then(()=>ST='Tersinkron '+new Date().toLocaleTimeString('id-ID')).catch(()=>ST='Gagal sinkron')},800)}
+async function pull(){if(!SY||document.querySelector('.ov')||document.activeElement?.matches?.('input,textarea,select'))return;try{const r=await rpc('hm_get',{c:SY.c});if(r&&r[0]){const d=r[0].data;if((d.ts||0)>(S.ts||0)){S=d;LJ=JSON.stringify({...S,ts:0});try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}ST='Tersinkron '+new Date().toLocaleTimeString('id-ID');render()}else if((S.ts||0)>(d.ts||0))push()}else{S.ts=S.ts||Date.now();push()}}catch(e){ST='Gagal sinkron – cek URL, key, dan kode'}}
+function syF(){const g=()=>{const a=new Uint8Array(9);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(36)).join('')};form('Hubungkan Supabase',[['u','Project URL (https://xxxx.supabase.co)',SY?SY.u:''],['k','Anon / publishable key',SY?SY.k:''],['c','Kode keluarga (rahasia, sama di semua perangkat)',SY?SY.c:g()]],x=>{SY={u:x[0].trim().replace(/\/$/,''),k:x[1].trim(),c:x[2].trim()};try{localStorage.setItem('hm-sync',JSON.stringify(SY))}catch(e){}setTimeout(pull,150)})}
+function syOff(){SY=null;ST='';try{localStorage.removeItem('hm-sync')}catch(e){}render()}
+function render(){$('#nav').innerHTML=NAV.map(n=>`<button class="${V==n[0]?'on':''}" onclick="go('${n[0]}')">${n[1]}</button>`).join('');$('#app').innerHTML=P[V]();save()}
+init();LJ=JSON.stringify({...S,ts:0});render();pull();setInterval(pull,15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+</script></body></html>
